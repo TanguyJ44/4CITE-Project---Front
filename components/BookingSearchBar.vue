@@ -64,5 +64,6 @@ export default {
 h2 {
   margin: 0 auto;
   text-align: center;
+  font-size: xx-large;
 }
 </style>
