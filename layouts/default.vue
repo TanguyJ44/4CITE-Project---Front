@@ -21,7 +21,7 @@
           v-for="icon in icons"
           :key="icon"
           class="mx-4"
-          :icon="icon"
+          icon="icon"
           variant="text"
         >
           <v-icon>{{ icon }}</v-icon>

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="12">
+    <v-row justify="center" align="center">
+      <v-col cols="10">
         <BookingSearchBar />
       </v-col>
     </v-row>
@@ -19,10 +19,12 @@
 </template>
 
 <script>
-import HomeTimeline from '~/components/HomeTimeline.vue';
-
 export default {
-    name: "IndexPage",
-    components: { HomeTimeline }
+  name: 'Accueil',
+  head() {
+    return {
+      title: 'Accueil',
+    }
+  },
 }
 </script>
