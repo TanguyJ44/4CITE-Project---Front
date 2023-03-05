@@ -12,7 +12,7 @@
           <v-list-item-subtitle> Akkor Hôtel </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item v-if="miniVariant">
+      <v-list-item v-else>
         <v-list-item-content>
           <v-list-item-title class="text-h6">🏠</v-list-item-title>
           <v-spacer />
@@ -39,8 +39,10 @@
       <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
-      <v-toolbar-title>Mon espace</v-toolbar-title>
-      <v-btn id="logout">
+      <v-toolbar-title
+        >Bienvenue sur votre espace, {{ userName }} 👋</v-toolbar-title
+      >
+      <v-btn id="logout" @click="logout">
         Déconnexion
         <v-icon color="red" right>mdi-exit-to-app</v-icon>
       </v-btn>
@@ -60,6 +62,7 @@ export default {
     return {
       clipped: false,
       miniVariant: false,
+      userName: '',
       items: [
         {
           icon: 'mdi-home',
@@ -73,6 +76,15 @@ export default {
         },
       ],
     }
+  },
+  mounted() {
+    this.userName = JSON.parse(localStorage.getItem('user')).details.name
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('user')
+      this.$router.push('/')
+    },
   },
 }
 </script>

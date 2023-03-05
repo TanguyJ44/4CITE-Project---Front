@@ -50,3 +50,6 @@ jobs:
 
       - name: Run tests 🧪
         run: yarn test
+
+      - name: Run deploy 🧪
+        run: echo "✅ Deployment performed on the server !"

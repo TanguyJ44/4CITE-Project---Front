@@ -6,12 +6,46 @@
       max-width="500"
       rounded="lg"
     >
-      <v-form v-model="formIsValid" @submit.prevent="loginUser">
-        <h1 class="display-1 font-weight-light pb-4">Mon compte</h1>
+      <v-alert
+        v-if="registrationSuccess"
+        density="compact"
+        type="success"
+        closable
+      >
+        Votre compte a bien été créé ! Vous pouvez maintenant vous connecter.
+        <v-btn
+          class="mt-2"
+          variant="outlined"
+          color="white"
+          text
+          to="login"
+          :style="{ border: '1px solid white' }"
+        >
+          Se connecter
+        </v-btn>
+      </v-alert>
+
+      <v-form
+        v-if="!registrationSuccess"
+        v-model="formIsValid"
+        @submit.prevent="registerUser"
+      >
+        <h1 class="display-1 font-weight-light pb-4">Inscription</h1>
 
         <v-alert v-if="alert" density="compact" type="error" closable>
-          Email ou mot de passe incorrect !
+          Un compte existe déjà avec cette adresse email !
         </v-alert>
+
+        <div class="text-subtitle-1 text-medium-emphasis">Nom</div>
+
+        <v-text-field
+          v-model="name"
+          :rules="[rules.required, rules.minName]"
+          density="compact"
+          placeholder="Entrer votre nom"
+          prepend-inner-icon="mdi-account-outline"
+          variant="outlined"
+        ></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis">Adresse email</div>
 
@@ -28,13 +62,6 @@
           class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
         >
           Mot de passe
-
-          <a
-            class="text-caption text-decoration-none text-blue"
-            rel="noopener noreferrer"
-          >
-            Mot de passe oublié ?</a
-          >
         </div>
 
         <v-text-field
@@ -67,17 +94,17 @@
           block
           :disabled="!formIsValid"
         >
-          Se connecter
+          S'inscrire
         </v-btn>
       </v-form>
 
-      <v-card-text class="text-center">
+      <v-card-text v-if="!registrationSuccess" class="text-center">
         <a
           class="text-blue text-decoration-none"
-          href="register"
+          href="login"
           rel="noopener noreferrer"
         >
-          Pas encore inscrit ?
+          Déjà inscrit ? Connectez-vous
         </a>
       </v-card-text>
     </v-card>
@@ -93,12 +120,16 @@ export default {
     },
   },
   data: () => ({
+    name: null,
     email: null,
     password: null,
     formIsValid: false,
     alert: false,
+    registrationSuccess: false,
     rules: {
       required: (value) => !!value || 'Ce champ est obligatoire',
+      minName: (value) =>
+        (value && value.length >= 2) || 'Le nom est trop court',
       minPassword: (value) =>
         (value && value.length >= 6) ||
         'Le mot de passe doit faire au moins 6 caractères',
@@ -108,20 +139,18 @@ export default {
     },
   }),
   methods: {
-    async loginUser() {
+    async registerUser() {
       this.alert = false
-      const user = await this.$axios
-        .$post('user/login', {
+      await this.$axios
+        .$post('user/register', {
+          name: this.name,
           email: this.email,
           password: this.password,
         })
         .catch(() => {
           this.alert = true
         })
-      if (user) {
-        localStorage.setItem('user', JSON.stringify(user))
-        this.$router.push('/dashboard/user/booking')
-      }
+      this.registrationSuccess = true
     },
   },
 }

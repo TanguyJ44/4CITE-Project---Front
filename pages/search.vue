@@ -8,12 +8,6 @@
           </v-card-title>
           <v-card-text>
             <v-col cols="12">
-              <v-card class="pa-2" outlined tile> Column </v-card>
-            </v-col>
-            <v-col cols="12">
-              <v-card class="pa-2" outlined tile> Column </v-card>
-            </v-col>
-            <v-col cols="12">
               <v-text-field label="Filtrer par emplacement"></v-text-field>
             </v-col>
             <v-col cols="12">
@@ -37,13 +31,13 @@
             <h2 class="headline mb-0">Rechercher un hôtel</h2>
           </v-card-title>
           <v-sheet
-            v-for="i in 5"
-            :key="i"
+            v-for="hotel in hotels"
+            :key="hotel.id"
             rounded="lg"
             class="text-body-2 mx-auto mb-6"
             elevation="4"
           >
-            <HotelCard />
+            <HotelCard :hotel="hotel" />
           </v-sheet>
         </v-card>
       </v-flex>
@@ -53,6 +47,12 @@
 
 <script>
 export default {
+  async asyncData({ $axios, route }) {
+    const { data } = await $axios.get(`findHotels?city=${route.query.city}`)
+    return {
+      hotels: data,
+    }
+  },
   head() {
     return {
       title: 'Rechercher un hôtel',
